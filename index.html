@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Tree Viewer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        font-size: 1.5rem;
+      }
+      ul {
+        border-left: 1px solid rgba(128, 128, 128, 0.308);
+        padding-left: 10px;
+        list-style-type: none;
+      }
+
+      ul ul {
+        margin-left: 5px;
+      }
+      span {
+        color: #4e9590;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>JSON Tree Viewer</h1>
+      <p>
+        Simple JSON Viewer that runs completely on-client. No data exchange.
+      </p>
+      <input type="file" id="fileInput" accept=".json" />
+      <button onclick="parseFile()">Parse JSON File</button>
+      <div id="jsonTree"></div>
+    </main>
+  </body>
+  <script>
+    function parseFile() {
+      const fileInput = document.getElementById("fileInput");
+      const jsonTree = document.getElementById("jsonTree");
+
+      const file = fileInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          const fileContent = event.target.result;
+          try {
+            const data = JSON.parse(fileContent);
+            jsonTree.innerHTML = "";
+            jsonTree.appendChild(createJSONTree(data));
+          } catch (error) {
+            jsonTree.innerHTML =
+              '<p style="color: red;">Invalid file. Please load a valid JSON file.</p>';
+          }
+        };
+
+        reader.readAsText(file);
+      }
+    }
+
+    function createJSONTree(data) {
+      if (typeof data !== "object" || data === null) {
+        return document.createTextNode(data);
+      }
+
+      const ul = document.createElement("ul");
+      for (const key in data) {
+        const li = document.createElement("li");
+        const keySpan = document.createElement("span");
+        keySpan.innerHTML = key + ": ";
+        li.appendChild(keySpan);
+        li.appendChild(createJSONTree(data[key]));
+        ul.appendChild(li);
+      }
+
+      return ul;
+    }
+  </script>
+</html>
