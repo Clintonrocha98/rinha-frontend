@@ -17,14 +17,35 @@
         font-family: "Inter", sans-serif;
         font-size: 1.5rem;
       }
+      section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .custom-file-upload {
+        border-radius: 0.3125rem;
+        border: 1px solid #000;
+        opacity: 0.7;
+        background: linear-gradient(180deg, #e4e4e4 0%, #f7f7f7 100%);
+        cursor: pointer;
+      }
+      .custom-file-upload input {
+        display: none;
+      }
       ul {
         border-left: 1px solid rgba(128, 128, 128, 0.308);
         padding-left: 10px;
         list-style-type: none;
       }
+      ul:nth-child(1) {
+        border: none;
+      }
 
       ul ul {
         margin-left: 5px;
+      }
+      li {
+        margin-bottom: 10px;
       }
       span {
         color: #4e9590;
@@ -33,18 +54,28 @@
   </head>
   <body>
     <main>
-      <h1>JSON Tree Viewer</h1>
-      <p>
-        Simple JSON Viewer that runs completely on-client. No data exchange.
-      </p>
-      <input type="file" id="fileInput" accept=".json" />
-      <button onclick="parseFile()">Parse JSON File</button>
+      <section>
+        <h1>JSON Tree Viewer</h1>
+        <a
+          href="https://drive.google.com/drive/folders/1oO0AoBQukdF3_DxRYn1di7O4Iiqom1wJ"
+          target="_blank"
+          >Test files</a
+        >
+        <p>
+          Simple JSON Viewer that runs completely on-client. No data exchange.
+        </p>
+        <label class="custom-file-upload" for="fileInput">
+          Load json
+          <input type="file" id="fileInput" accept=".json" />
+        </label>
+      </section>
       <div id="jsonTree"></div>
     </main>
   </body>
   <script>
+    const fileInput = document.getElementById("fileInput");
+    fileInput.addEventListener("change", parseFile);
     function parseFile() {
-      const fileInput = document.getElementById("fileInput");
       const jsonTree = document.getElementById("jsonTree");
 
       const file = fileInput.files[0];
